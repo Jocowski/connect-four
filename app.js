@@ -1,147 +1,124 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const squares = document.querySelectorAll(".grid div");
-    const result = document.querySelector("#result");
-    const displayCurrentPlayer = document.querySelector("#current-player");
-    let currentPlayer = 1;
+document.addEventListener("DOMContentLoaded", () => {
+    const rows = 6; // Number of rows
+    const columns = 7; // Number of columns
+    const gameContainer = document.getElementById("game-container");
+    const resultDisplay = document.getElementById("result");
+    const currentPlayerDisplay = document.getElementById("current-player");
+    const resetButton = document.getElementById("reset-button");
+    
+    let currentPlayer = 1; // Player 1 starts
+    let gameActive = true; // Game state
+    const grid = []; // Grid to hold cells
 
-    const winningArray = [
-        [0, 1, 2, 3],
-        [41, 40, 39, 38],
-        [7, 8, 9, 10],
-        [34, 33, 32, 31],
-        [14, 15, 16, 17],
-        [27, 26, 25, 24],
-        [21, 22, 23, 24],
-        [20, 19, 18, 17],
-        [28, 29, 30, 31],
-        [13, 12, 11, 10],
-        [35, 36, 37, 38],
-        [6, 5, 4, 3],
-        [0, 7, 14, 21],
-        [41, 34, 27, 20],
-        [1, 8, 15, 22],
-        [40, 33, 26, 19],
-        [2, 9, 16, 23],
-        [39, 32, 25, 18],
-        [3, 10, 17, 24],
-        [38, 31, 24, 17],
-        [4, 11, 18, 25],
-        [37, 30, 23, 16],
-        [5, 12, 19, 26],
-        [36, 29, 22, 15],
-        [6, 13, 20, 27],
-        [35, 28, 21, 14],
-        [0, 8, 16, 24],
-        [41, 33, 25, 17],
-        [7, 15, 23, 31],
-        [34, 26, 18, 10],
-        [14, 22, 30, 38],
-        [27, 19, 11, 3],
-        [35, 29, 23, 17],
-        [6, 12, 18, 24],
-        [28, 22, 16, 10],
-        [13, 19, 25, 31],
-        [21, 15, 9, 3],
-        [20, 26, 32, 38],
-        [36, 30, 24, 18],
-        [5, 11, 17, 23],
-        [37, 31, 25, 19],
-        [4, 10, 16, 22],
-        [2, 10, 18, 26],
-        [39, 31, 23, 15],
-        [1, 9, 17, 25],
-        [40, 32, 24, 16],
-        [9, 17, 25, 33],
-        [8, 16, 24, 32],
-        [11, 17, 23, 29],
-        [12, 18, 24, 30],
-        [1, 2, 3, 4],
-        [5, 4, 3, 2],
-        [8, 9, 10, 11],
-        [12, 11, 10, 9],
-        [15, 16, 17, 18],
-        [19, 18, 17, 16],
-        [22, 23, 24, 25],
-        [26, 25, 24, 23],
-        [29, 30, 31, 32],
-        [33, 32, 31, 30],
-        [36, 37, 38, 39],
-        [40, 39, 38, 37],
-        [7, 14, 21, 28],
-        [8, 15, 22, 29],
-        [9, 16, 23, 30],
-        [10, 17, 24, 31],
-        [11, 18, 25, 32],
-        [12, 19, 26, 33],
-        [13, 20, 27, 34], 
-    ];
+    // 1. Create the game grid dynamically
+    function createGrid() {
+        gameContainer.innerHTML = ""; // Clear previous grid
+        grid.length = 0; // Reset the grid array
 
-    function checkBoard() {
+        for (let row = 0; row < rows; row++) {
+            const rowArray = [];
+            for (let col = 0; col < columns; col++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                gameContainer.appendChild(cell);
+                rowArray.push(cell);
 
-        for (let i = 0; i < winningArray.length; i++) {
-
-            const square1 = squares[winningArray[i][0]];
-            const square2 = squares[winningArray[i][1]];
-            const square3 = squares[winningArray[i][2]];
-            const square4 = squares[winningArray[i][3]];
-
-            if (square1.classList.contains("player-one") && 
-                square2.classList.contains("player-one") && 
-                square3.classList.contains("player-one") && 
-                square4.classList.contains("player-one")) {
-                
-                if (result.innerHTML == "") {
-                    result.innerHTML = "Player One!";
-                }
-                
-
+                // Add click event to each cell
+                cell.addEventListener("click", () => handleCellClick(col));
             }
-            
-            if (square1.classList.contains("player-two") && 
-                square2.classList.contains("player-two") && 
-                square3.classList.contains("player-two") && 
-                square4.classList.contains("player-two")) {
-                
-                if (result.innerHTML == "") {
-                    result.innerHTML = "Player Two!";
-                }
-
-            }
-
+            grid.push(rowArray);
         }
-
     }
 
-    for (let i = 0; i < squares.length; i++) {
+    // 2. Handle cell click
+    function handleCellClick(col) {
+        if (!gameActive) return; // Stop if the game is over
 
-        squares[i].onclick = function() {
-
-            if (squares[i + 7].classList.contains("taken") && !squares[i].classList.contains("taken")) {
-
-                if (currentPlayer == 1) {
-                    
-                    squares[i].classList.add("taken");
-                    squares[i].classList.add("player-one");
-                    currentPlayer = 2;
-
-                } else if (currentPlayer == 2) {
-
-                    squares[i].classList.add("taken");
-                    squares[i].classList.add("player-two");
-                    currentPlayer = 1;
-
-                }
-
-            } else {
-
-                alert("Can't Go There!");
-
+        // Find the lowest available cell in the column
+        for (let row = rows - 1; row >= 0; row--) {
+            const cell = grid[row][col];
+            if (!cell.classList.contains("player-one") && !cell.classList.contains("player-two")) {
+                placeToken(cell);
+                checkWin(row, col); // Check for a win
+                switchPlayer(); // Switch to the other player
+                return;
             }
-
-            checkBoard();
-
         }
 
+        alert("Column is full! Try another column.");
     }
 
+    // 3. Place token in the selected cell
+    function placeToken(cell) {
+        const playerClass = currentPlayer === 1 ? "player-one" : "player-two";
+        cell.classList.add(playerClass);
+    }
+
+    // 4. Switch to the next player
+    function switchPlayer() {
+        currentPlayer = currentPlayer === 1 ? 2 : 1;
+        const playerColor = currentPlayer === 1 ? "Blue" : "Red";
+        currentPlayerDisplay.textContent = `${currentPlayer} (${playerColor})`;
+    }
+
+    // 5. Check for a win
+    function checkWin(row, col) {
+        const playerClass = currentPlayer === 1 ? "player-one" : "player-two";
+        const directions = [
+            { dr: 0, dc: 1 }, // Horizontal
+            { dr: 1, dc: 0 }, // Vertical
+            { dr: 1, dc: 1 }, // Diagonal \
+            { dr: 1, dc: -1 } // Diagonal /
+        ];
+
+        for (let { dr, dc } of directions) {
+            if (countConnectedTokens(row, col, dr, dc, playerClass) >= 4) {
+                endGame();
+                return;
+            }
+        }
+    }
+
+    // 6. Count connected tokens in a direction
+    function countConnectedTokens(row, col, dr, dc, playerClass) {
+        let count = 1; // Start with the current cell
+
+        // Check in both directions
+        for (let sign of [-1, 1]) {
+            let r = row + dr * sign;
+            let c = col + dc * sign;
+            while (isValidCell(r, c) && grid[r][c].classList.contains(playerClass)) {
+                count++;
+                r += dr * sign;
+                c += dc * sign;
+            }
+        }
+
+        return count;
+    }
+
+    // 7. Validate if a cell is within the grid
+    function isValidCell(row, col) {
+        return row >= 0 && row < rows && col >= 0 && col < columns;
+    }
+
+    // 8. End the game
+    function endGame() {
+        resultDisplay.textContent = `Player ${currentPlayer} wins!`;
+        gameActive = false;
+    }
+
+    // 9. Reset the game
+    resetButton.addEventListener("click", () => {
+        gameActive = true;
+        currentPlayer = 1;
+        currentPlayerDisplay.textContent = "1 (Blue)";
+        resultDisplay.textContent = "";
+        createGrid();
+    });
+
+    // Initialize the game
+    createGrid();
 });

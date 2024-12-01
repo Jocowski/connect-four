@@ -2,69 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect Four</title>
-
     <link href="style.css" rel="stylesheet">
-    <script src="app.js"></script>
 </head>
 <body>
     <h1>Connect Four</h1>
-
-    <h3>Current Player: <span id="current-player"></span></h3>
+    <h3>Current Player: <span id="current-player">1 (Blue)</span></h3>
     <h3>Winner: <span id="result"></span></h3>
-
-    <div class="grid">
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div class="taken bottom"></div>
-        <div class="taken bottom"></div>
-        <div class="taken bottom"></div>
-        <div class="taken bottom"></div>
-        <div class="taken bottom"></div>
-        <div class="taken bottom"></div>
-        <div class="taken bottom"></div>
-
-    </div>
+    <button id="reset-button">Restart Game</button>
+    <div id="game-container"></div>
+    <script src="app.js"></script>
 </body>
 </html>
